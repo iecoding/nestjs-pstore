@@ -7,7 +7,11 @@ import {
   Body,
   Put,
   Delete,
+  HttpStatus,
+  HttpCode,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 
 @Controller('products')
 export class ProductsController {
@@ -31,11 +35,22 @@ export class ProductsController {
   }
 
   // lo dinámico despues de lo estático
+  /* Estilo NestJS
   @Get(':productId')
+  @HttpCode(HttpStatus.ACCEPTED)
   getProduct(@Param() params: any) {
     return {
       message: `product ${params.productId}`,
     };
+  } */
+
+  @Get(':productId')
+  @HttpCode(HttpStatus.ACCEPTED)
+  getOne(@Res() response: Response, @Param('productId') productId: string) {
+    response.status(200).send({
+      // estilo Express.js
+      message: `product ${productId}`,
+    });
   }
 
   @Get(':productId')

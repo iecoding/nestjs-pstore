@@ -25,9 +25,6 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    // return {
-    //   message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
-    // };
     return this.productsService.findAll();
   }
   // estático primero
@@ -51,21 +48,8 @@ export class ProductsController {
     };
   }
 
-  /*
-  //http://localhost:3000/products?limit=100&offset=50
-  @Get('products')
-  getProducts(@Query() params: any) {
-    const { limit, offset } = params;
-    return `products: limit=> ${limit} offset=> ${offset}`;
-  }
-  */
-
   @Post()
   create(@Body() payload: CreateProductDto) {
-    // return {
-    //   message: 'action create',
-    //   payload,
-    // };
     return this.productsService.create(payload);
   }
 

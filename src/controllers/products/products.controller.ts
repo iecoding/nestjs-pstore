@@ -8,13 +8,14 @@ import {
   Put,
   Delete,
   HttpStatus,
-  HttpCode,
-  Res,
+  HttpCode
 } from '@nestjs/common';
-import { Response } from 'express';
+import { ProductsService } from './../../services/products/products.service';
 
 @Controller('products')
 export class ProductsController {
+  constructor(private productsService: ProductsService) {}
+
   // http://localhost:3000/products?brand=xyz
   @Get()
   getProducts(
@@ -22,9 +23,10 @@ export class ProductsController {
     @Query('offset') offset = 0,
     @Query('brand') brand: string,
   ) {
-    return {
-      message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
-    };
+    // return {
+    //   message: `products limit=> ${limit} offset=> ${offset} brand=> ${brand}`,
+    // };
+    return this.productsService.findAll();
   }
   // estático primero
   @Get('filter')
@@ -34,23 +36,14 @@ export class ProductsController {
     };
   }
 
-  // lo dinámico despues de lo estático
-  /* Estilo NestJS
   @Get(':productId')
   @HttpCode(HttpStatus.ACCEPTED)
-  getProduct(@Param() params: any) {
-    return {
-      message: `product ${params.productId}`,
-    };
-  } */
-
-  @Get(':productId')
-  @HttpCode(HttpStatus.ACCEPTED)
-  getOne(@Res() response: Response, @Param('productId') productId: string) {
-    response.status(200).send({
-      // estilo Express.js
-      message: `product ${productId}`,
-    });
+  getOne(@Param('productId') productId: string) {
+    // response.status(200).send({
+    //   // estilo Express.js
+    //   message: `product ${productId}`,
+    // });
+    return this.productsService.findOne(+productId);
   }
 
   @Get(':productId')
@@ -71,19 +64,16 @@ export class ProductsController {
 
   @Post()
   create(@Body() payload: any) {
-    return {
-      message: 'action create',
-      payload,
-    };
+    // return {
+    //   message: 'action create',
+    //   payload,
+    // };
+    return this.productsService.create(payload);
   }
 
   @Put(':id')
-  update(@Param('id') id: number, @Body() payload: any) {
-    return {
-      id,
-      message: 'action update',
-      payload,
-    };
+  update(@Param('id') id: string, @Body() payload: any) {
+    return this.productsService.update(+id, payload);
   }
 
   @Delete(':id')
